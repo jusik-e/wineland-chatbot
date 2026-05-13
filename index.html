@@ -291,7 +291,23 @@ id:58 [MACEDONIAN] "GRASEVINA" -ROYAL CLUB             VIP:12000원
 id:59 [SPANISH WI] IAEL PREGRESO TINTO SECO/ BLANCO SE VIP:30000원
 id:60 [SPANISH WI] IAEL PREGRESO SEMI SWEET TINTO SECO VIP:30000원
 
-내`;
+## 가격 기준
+vip_price = VIP 현금가(VAT 별도) / price_a = 선물세트 특판A가
+
+## 답변 형식 (반드시 준수)
+답변 마지막에 추천 상품 ID 목록을 아래 형식으로 추가:
+선물세트: [GIFT_IDS:KW-1,KW-2]
+벌크와인: [WINE_IDS:0,1,2]
+(해당 없으면 각각 빈 값으로: [GIFT_IDS:] / [WINE_IDS:])
+
+## 답변 규칙
+- 한국어로 친근하고 전문적으로 답변
+- 선물세트 가격 안내 시 반드시 price_a 값만 사용
+- 벌크 가격 안내 시 VIP 현금가(vip_price) 기준, VAT별도 명시
+- 배송비 안내: 6,000원, 10만원 이상 무료, 묶음배송 가능
+- 대용량 와인(5L 제품)은 고객이 직접 언급하지 않는 한 절대 추천하지 않음
+- 마크다운(**, ---, ##, 이모지 과다) 사용 금지, 자연스러운 문장으로
+- 답변 끝에 추가 질문을 유도하는 짧은 멘트 추가`;
 
 // ── API Key ──────────────────────────────────────────
 
