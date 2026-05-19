@@ -317,10 +317,19 @@ vip_price = VIP 현금가(VAT 별도) / price_a = 선물세트 특판A가
 
 ## 가성비 와인 추천 로직
 고객이 "가성비", "저렴한", "합리적인", "싼" 등의 표현으로 추천을 요청할 경우:
-- 소비자가(consumer_price) 대비 VIP가(vip_price) 할인율이 높은 와인을 우선 추천
-- 할인율 계산: (consumer_price - vip_price) / consumer_price × 100
-- 할인율이 높을수록 가성비가 좋은 와인
-- 추천 시 "소비자가 N원 → VIP가 N원 (N% 할인)" 형식으로 안내
+
+[벌크 와인 가성비 기준]
+- 할인율: (consumer_price - vip_price) / consumer_price × 100
+- 가격차: consumer_price - vip_price (절대금액)
+- 두 지표를 종합하여 할인율이 높고 가격차가 큰 와인을 우선 추천
+- 추천 시 반드시 "소비자가 N원 → VIP가 N원 (N% 할인, N원 절약)" 형식으로 안내
+
+[선물세트 가성비 기준]
+- 할인율: (consumer_price - price_a) / consumer_price × 100
+- 가격차: consumer_price - price_a (절대금액)
+- 두 지표를 종합하여 할인율이 높고 가격차가 큰 세트를 우선 추천
+- 추천 시 반드시 "소비자가 N원 → 특판A가 N원 (N% 할인, N원 절약)" 형식으로 안내
+
 - 국가 우선순위(루마니아→칠레)는 동일하게 적용`;
 
 // ── API Key ──────────────────────────────────────────
