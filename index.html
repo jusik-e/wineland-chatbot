@@ -16,7 +16,7 @@ body{background:#f0ece4;min-height:100vh;display:flex;flex-direction:column;alig
 #msgs{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px}
 .msg{display:flex;gap:8px;align-items:flex-start}
 .msg.user{flex-direction:row-reverse}
-.bub{padding:10px 14px;border-radius:16px;font-size:16px;line-height:1.65;max-width:82%}
+.bub{padding:10px 14px;border-radius:16px;font-size:13px;line-height:1.65;max-width:82%}
 .bot .bub{background:#f0ede8;color:#222;border-bottom-left-radius:4px}
 .user .bub{background:#3C3489;color:#fff;border-bottom-right-radius:4px}
 .av{width:30px;height:30px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:16px}
@@ -154,19 +154,29 @@ var SYSTEM = `당신은 와인랜드(WINELAND Co.,Ltd)의 전문 VIP 소믈리�
 
 ### 벌크 와인 추천 시 국가 우선순위 (반드시 준수)
 [추천 비율 원칙] 벌크 와인 추천 시 아래 비율을 반드시 지킬 것
-- 루마니아 와인(ROMANIAN WINE): 전체 추천의 약 50%
-- 칠레 와인(CHILEAN WINE): 전체 추천의 약 30%
-- 기타 국가(스페인/이탈리아/마케도니아/프랑스 등): 전체 추천의 약 20%
+- 루마니아 와인(category=ROMANIAN WINE): 전체 추천의 약 50%
+- 칠레 와인(category=CHILEAN WINE): 전체 추천의 약 30%
+- 기타 국가(category가 SPANISH/ITALIAN/MACEDONIAN/FRANCH 등): 전체 추천의 약 20%
 
 예: 와인 4개 추천 → 루마니아 2개, 칠레 1개, 기타 1개
 예: 와인 6개 추천 → 루마니아 3개, 칠레 2개, 기타 1개
 예: 와인 3개 추천 → 루마니아 2개, 칠레 1개
 예: 와인 1~2개 추천 → 루마니아 위주, 가능하면 칠레 1개 포함
 
-[국가별 순위] 각 비율 내에서 조건에 맞는 와인 선택
-- 루마니아(50%): 조건(예산·종류·페어링)에 맞는 루마니아 와인으로 채움
-- 칠레(30%): 조건에 맞는 칠레 와인으로 채움
-- 기타(20%): 고객이 특정 국가 언급 시 해당 국가, 미언급 시 스페인·이탈리아·마케도니아 중 조건에 맞는 것으로 채움
+[국가 분류 규칙 - 반드시 준수]
+추천 시 와인의 category 필드를 기준으로 국가를 판단할 것:
+- ROMANIAN WINE → 루마니아 와인
+- CHILEAN WINE → 칠레 와인
+- ITALIAN WINE → 이탈리아 와인 (칠레 아님!)
+- SPANISH WINE → 스페인 와인 (칠레 아님!)
+- MACEDONIAN WINE → 마케도니아 와인
+- FRANCH WINE → 프랑스 와인
+칠레 와인 비율에 이탈리아·스페인 와인을 포함하는 것은 규칙 위반
+
+[답변 형식 규칙]
+- 추천 시 "루마니아 와인 (추천 1순위)", "칠레 와인 (추천 2순위)" 등 순위 표시 절대 금지
+- 국가명만 간단히 표기: "루마니아", "칠레", "이탈리아" 등
+- 와인을 번호로 나열할 때 국가별 소제목 없이 자연스럽게 나열해도 됨
 
 [주의] 루마니아 와인만 단독으로 추천하지 말 것. 반드시 칠레와 기타 국가도 비율에 맞게 포함할 것
 
