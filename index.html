@@ -64,6 +64,11 @@ body{background:#f0ece4;min-height:100vh;display:flex;flex-direction:column;alig
 .chips{display:flex;gap:6px;flex-wrap:wrap;padding:10px 16px;border-top:1px solid #f0ede8;background:#faf8f5;flex-shrink:0}
 .chip{font-size:12px;padding:5px 12px;border-radius:20px;border:1px solid #d5cce8;background:#fff;color:#534AB7;cursor:pointer;white-space:nowrap}
 .chip:hover{background:#eeedfe}
+.chip.buy{border-color:#A32D2D;background:#A32D2D;color:#fff;font-weight:600}
+.chip.buy:hover{background:#8a2424}
+.buy-btn{display:block;width:100%;margin-top:10px;padding:11px 0;border:none;border-radius:10px;background:#A32D2D;color:#fff;font-size:15px;font-weight:600;text-align:center;text-decoration:none;cursor:pointer}
+.buy-btn:hover{background:#8a2424}
+.buy-note{font-size:11px;color:#888;text-align:center;margin-top:5px}
 .chip.gold{border-color:#e8c97a;color:#C8860A}
 .chip.gold:hover{background:#fffdf0}
 #irow{display:flex;gap:8px;padding:12px 16px;border-top:1px solid #eee;flex-shrink:0}
@@ -99,6 +104,7 @@ body{background:#f0ece4;min-height:100vh;display:flex;flex-direction:column;alig
     <div class="chip" onclick="sc('올리브오일과 발사믹식초 추천해줘')">🫒 올리브유</div>
     <div class="chip" onclick="sc('꼬냑과 브랜디 추천해줘')">🥃 꼬냑/브랜디</div>
     <div class="chip" onclick="sc(this.textContent)">배송 안내</div>
+    <div class="chip buy" onclick="buyChat()">🛒 구매하기</div>
   </div>
   <div id="irow">
     <input id="inp" placeholder="가격·품종·페어링·선물 등 무엇이든 물어보세요..."
@@ -377,6 +383,7 @@ id:75 [MACEDO] "GRASEVINA" -ROYAL CLUB 그라세비나 로얄클럽 VIP:12,000�
 - "N만원 이상" 추천 시 → vip_price가 예산에 가장 가까운 와인부터 오름차순 추천
   예: "3만원 이상" → vip_price 30,000원 > 32,000원 > 35,000원 순서로 추천
 - 배송비 안내: 6,000원, 10만원 이상 무료, 묶음배송 가능
+- 구매·주문 문의 시: 화면의 "구매하기" 버튼을 눌러 구매 신청서(구글폼)를 작성하면 된다고 안내 (링크 주소는 직접 쓰지 말 것)
 - 마크다운(**, ---, ##) 사용 금지, 자연스러운 문장으로
 - 답변 끝에 추가 질문을 유도하는 짧은 멘트 추가
 - 대용량 와인(5L 제품: IAEL PREGRESO TINTO/BLANCO SECO 5L 등)은 고객이 직접 대용량을 언급하거나 문의하지 않는 한 절대 추천하지 않음
@@ -438,6 +445,7 @@ function openGiftModal(g){
     });
     rows.push('<div class="mrow"><div class="mlabel">구성 상품</div><div class="mvalue">'+wineHtml+'</div></div>');
   }
+  rows.splice(2,0,buyButtonHtml(g.name));
   body.innerHTML=rows.join('');
   document.getElementById('modal-bg').classList.add('show');
 }
@@ -463,6 +471,7 @@ function openBulkModal(w){
   if(w.region)rows.push('<div class="mrow"><div class="mlabel">생산지역</div><div class="mvalue">'+w.region+'</div></div>');
   if(w.grape)rows.push('<div class="mrow"><div class="mlabel">품종</div><div class="mvalue">'+w.grape+'</div></div>');
   if(w.note)rows.push('<div class="mrow"><div class="mlabel">테이스팅 노트</div><div class="mvalue">'+w.note+'</div></div>');
+  rows.splice(1,0,buyButtonHtml(w.name.replace(/\s+/g,' ')));
   body.innerHTML=rows.join('');
   document.getElementById('modal-bg').classList.add('show');
 }
@@ -518,6 +527,7 @@ function addMsg(role,text,gifts,wines){
     });
   }
 
+  if(role!=='user'&&((gifts&&gifts.length)||(wines&&wines.length))){var bb=document.createElement('div');bb.innerHTML=buyButtonHtml('');bub.appendChild(bb);}
   wrap.appendChild(av); wrap.appendChild(bub);
   msgsEl.appendChild(wrap);
   msgsEl.scrollTop=msgsEl.scrollHeight;
@@ -715,11 +725,37 @@ function calcGiftsByBudget(budget, mode, excludeOlive) {
   return filtered.slice(0, 6);
 }
 
+
+// ── 구매하기 (구글폼) ─────────────────────────────────
+// 구매 신청서 주소. 폼을 바꾸면 이 줄만 고치면 됩니다.
+var PURCHASE_FORM_URL='https://docs.google.com/forms/d/1puiJLC9j-H1kjX6MKgF_a6sK3Ba3I3-NJczoyRG1CD0/viewform';
+function escHtml(t){return String(t).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function buyButtonHtml(name){
+  return '<a class="buy-btn" href="'+PURCHASE_FORM_URL+'" target="_blank" rel="noopener">🛒 구매하기 (신청서 작성)</a>'
+    +'<div class="buy-note">'+(name?'신청서에 상품명 「'+escHtml(name)+'」을(를) 적어 주세요':'신청서에 원하시는 상품명과 수량을 적어 주세요')+'</div>';
+}
+function addBuyMsg(text){
+  var wrap=document.createElement('div');wrap.className='msg bot';
+  var av=document.createElement('div');av.className='av bav';av.textContent='🍷';
+  var bub=document.createElement('div');bub.className='bub';
+  var sp=document.createElement('span');sp.textContent=text;bub.appendChild(sp);
+  var box=document.createElement('div');box.innerHTML=buyButtonHtml('');bub.appendChild(box);
+  wrap.appendChild(av);wrap.appendChild(bub);msgsEl.appendChild(wrap);msgsEl.scrollTop=msgsEl.scrollHeight;
+}
+var BUY_TEXT='구매를 원하시면 아래 버튼을 눌러 구매 신청서를 작성해 주세요. 선물세트는 카드결제, 벌크 와인은 6병 이상 현금결제이며 배송비는 6,000원(10만원 이상 무료)입니다. 신청서를 확인한 뒤 연락드리겠습니다.';
+function isBuyIntent(t){
+  // "구매", "주문", "사고 싶어" 등 구매 의사. 예산·병수 추천 질문은 제외
+  if(/(\d+)\s*병|만\s*원|추천|방법이 뭐|어떻게/.test(t)) return false;
+  return /구매|주문|구입|사고\s*싶|살게|살래|살께|결제할/.test(t);
+}
+function buyChat(){addMsg('user','구매하기',[],[]);addBuyMsg(BUY_TEXT);}
+
 function sm(){
   var v=inpEl.value.trim();
   if(!v)return;
   inpEl.value='';
   addMsg('user',v,[],[]);
+  if(isBuyIntent(v)){addBuyMsg(BUY_TEXT);return;}
 
   // 선물세트 예산 쿼리 먼저 확인
   var gq = detectGiftBudgetQuery(v);
