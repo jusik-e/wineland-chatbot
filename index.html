@@ -104,7 +104,7 @@ body{background:#f0ece4;min-height:100vh;display:flex;flex-direction:column;alig
     <div class="chip" onclick="sc('올리브오일과 발사믹식초 추천해줘')">🫒 올리브유</div>
     <div class="chip" onclick="sc('꼬냑과 브랜디 추천해줘')">🥃 꼬냑/브랜디</div>
     <div class="chip" onclick="sc(this.textContent)">배송 안내</div>
-    <div class="chip buy" onclick="buyChat()">🛒 구매하기</div>
+    <div class="chip buy" onclick="buyChat()">🛒 구매상담하기</div>
   </div>
   <div id="irow">
     <input id="inp" placeholder="가격·품종·페어링·선물 등 무엇이든 물어보세요..."
@@ -390,7 +390,7 @@ id:77 VILLAGOLF HOLE IN ONE MALBEC 빌라골프 홀인원 말벡
 - "N만원 이상" 추천 시 → vip_price가 예산에 가장 가까운 와인부터 오름차순 추천
   예: "3만원 이상" → vip_price 30,000원 > 32,000원 > 35,000원 순서로 추천
 - 결제·배송비 문의 시: 구체적인 금액이나 결제 방법은 말하지 말고 "카드결제·배송비 안내 사항"이라고만 안내
-- 구매·주문 문의 시: 화면의 "구매하기" 버튼을 눌러 구매 신청서(구글폼)를 작성하면 된다고 안내 (링크 주소는 직접 쓰지 말 것)
+- 구매·주문 문의 시: 화면의 "구매상담하기" 버튼을 눌러 구매 신청서(구글폼)를 작성하면 된다고 안내 (링크 주소는 직접 쓰지 말 것)
 - 마크다운(**, ---, ##) 사용 금지, 자연스러운 문장으로
 - 답변 끝에 추가 질문을 유도하는 짧은 멘트 추가
 - 대용량 와인(5L 제품: IAEL PREGRESO TINTO/BLANCO SECO 5L 등)은 고객이 직접 대용량을 언급하거나 문의하지 않는 한 절대 추천하지 않음
@@ -733,12 +733,12 @@ function calcGiftsByBudget(budget, mode, excludeOlive) {
 }
 
 
-// ── 구매하기 (구글폼) ─────────────────────────────────
+// ── 구매상담하기 (구글폼) ─────────────────────────────────
 // 구매 신청서 주소. 폼을 바꾸면 이 줄만 고치면 됩니다.
 var PURCHASE_FORM_URL='https://docs.google.com/forms/d/1puiJLC9j-H1kjX6MKgF_a6sK3Ba3I3-NJczoyRG1CD0/viewform';
 function escHtml(t){return String(t).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 function buyButtonHtml(name){
-  return '<a class="buy-btn" href="'+PURCHASE_FORM_URL+'" target="_blank" rel="noopener">🛒 구매하기 (신청서 작성)</a>'
+  return '<a class="buy-btn" href="'+PURCHASE_FORM_URL+'" target="_blank" rel="noopener">🛒 구매상담하기 (신청서 작성)</a>'
     +'<div class="buy-note">'+(name?'신청서에 상품명 「'+escHtml(name)+'」을(를) 적어 주세요':'신청서에 원하시는 상품명과 수량을 적어 주세요')+'</div>';
 }
 function addBuyMsg(text){
@@ -755,7 +755,7 @@ function isBuyIntent(t){
   if(/(\d+)\s*병|만\s*원|추천|방법이 뭐|어떻게/.test(t)) return false;
   return /구매|주문|구입|사고\s*싶|살게|살래|살께|결제할/.test(t);
 }
-function buyChat(){addMsg('user','구매하기',[],[]);addBuyMsg(BUY_TEXT);}
+function buyChat(){addMsg('user','구매상담하기',[],[]);addBuyMsg(BUY_TEXT);}
 
 function sm(){
   var v=inpEl.value.trim();
